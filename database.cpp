@@ -1,5 +1,6 @@
 #include <algorithm>
-#include <stdexcept>
+//#include <stdexcept>
+//#include <functional>
 
 #include "database.h"
 
@@ -40,13 +41,9 @@ ostream& Database::Print(ostream& stream) const
 
 DateEvent Database::Last(const Date& date) const
 {
-	const auto base_begin_iter = begin(base_), base_end_iter = end(base_);
-	while (base_begin_iter != base_end_iter && base_begin_iter->first < date)
-	{
-		next(base_begin_iter);
-	}
-	if (base_begin_iter == begin(base_)) throw invalid_argument("There is no date smaller than given.");
-	return  {base_begin_iter->first, base_begin_iter->second[base_begin_iter->second.size() - 1]}; // cout the date and last events
+	const auto it = find_if_not(begin(base_), end(base_),
+		[date](pair<Date, vector<string>>& pr) { return pr.first <= date; });
+	return  {it->first, it->second[it->second.size() - 1]}; // cout the date and last events
 	
 }
 
@@ -54,19 +51,53 @@ DateEvent Database::Last(const Date& date) const
 template<typename T>
 int Database::RemoveIf(T predicate)
 {
+	int count = 0;
 	auto map_iter = begin(base_);
-	while(map_iter!=end(base_))
+	while(map_iter != end(base_))
 	{
-		auto vector_iter = begin(map_iter->second);
-		for(vector_iter; vector_iter != end(map_iter->second); next(vector_iter))
-		stable_partition(begin(base_), end(base_), predicate());
+		const Date &date = map_iter->first;
+
+		auto lambda = [date, predicate](const string& event) { return !predicate(date, event); };
+		
+		auto &vector_events = map_iter->second;
+		auto iter = stable_partition(begin(vector_events), end(vector_events), lambda);
+
+		int i = end(vector_events) - iter;
+		while(i > 0)
+		{
+			vector_events.pop_back();
+			++count;
+			--i;
+		}
+		++map_iter;
 	}
+	return count;
 }
 
 template<typename T>
 vector<DateEvent> Database::FindIf(T predicate)
 {
-	
+	vector<DateEvent> result;
+	auto map_iter = begin(base_);
+	while (map_iter != end(base_))
+	{
+		const Date &date = map_iter->first;
+		
+		auto lambda = [date, predicate](const string& event) { return predicate(date, event); };
+
+		auto &vector_events = map_iter->second;
+
+		int count = 0;
+		while (count != end(vector_events) - begin(vector_events)) {
+			auto iter = find_if(begin(vector_events) + count, end(vector_events), lambda);
+			count = iter - begin(vector_events);
+			++count;
+			result.push_back(*iter);
+		}
+		
+		++map_iter;
+	}
+	return result;
 }
 
 

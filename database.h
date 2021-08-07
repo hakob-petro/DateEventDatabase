@@ -15,7 +15,7 @@ struct DateEvent
 	const string event_;
 };
 
-ostream& operator << (ostream& stream, const DateEvent& ivent);
+ostream& operator << (ostream& stream, const DateEvent& de);
 
 class Database
 {
@@ -34,5 +34,4 @@ public:
 
 private:
 	map<Date, vector<string>> base_;
-	// unordered_set<pair<Date, string>>; - sax variantnery linum a shat hesht. Lasty zut miangam ciklov frum enq
 };
