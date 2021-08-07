@@ -33,5 +33,5 @@ public:
 	DateEvent Last(const Date& date) const;
 
 private:
-	map<Date, vector<string>> base_;
+	map<const Date, vector<const string>> base_;
 };

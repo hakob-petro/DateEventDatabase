@@ -1,5 +1,5 @@
 #include <algorithm>
-//#include <stdexcept>
+#include <stdexcept>
 //#include <functional>
 
 #include "database.h"
@@ -16,10 +16,10 @@ ostream& operator << (ostream& stream, const DateEvent& de)
 
 void Database::Add(const Date& date, const string& event)
 {
-	vector<string> &events = base_[date];
+	vector<const string> &events = base_[date];
 	if (events.empty() == 0) events.push_back(event);
 	else {
-		vector<string>::iterator it = find(base_[date].begin(), base_[date].end(), event);
+		vector<const string>::iterator it = find(base_[date].begin(), base_[date].end(), event);
 		if (it == base_[date].end())
 		{
 			base_[date].push_back(event);
@@ -42,7 +42,8 @@ ostream& Database::Print(ostream& stream) const
 DateEvent Database::Last(const Date& date) const
 {
 	const auto it = find_if_not(begin(base_), end(base_),
-		[date](pair<Date, vector<string>>& pr) { return pr.first <= date; });
+		[date](pair<const Date, vector<const string>>& pr) { return pr.first <= date; });
+	if (it == end(base_)) throw invalid_argument("No events with date less then given!");
 	return  {it->first, it->second[it->second.size() - 1]}; // cout the date and last events
 	
 }
