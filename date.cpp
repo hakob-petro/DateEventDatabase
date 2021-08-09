@@ -4,11 +4,11 @@
 
 using namespace std;
 
-Date::Date(const int& year, const int& month, const int& day) : year_(year), month_(month), day_(day) {}
+Date::Date(int& year, int& month, int& day) : year_(year), month_(month), day_(day) {}
 
 Date ParseDate(istringstream& is)
 {
-	vector<const int> date;
+	vector<int> date;
 	int number = 0 ;
 	while (is >> number && date.size()!=3) {
 		is.ignore(1);
@@ -42,7 +42,7 @@ bool operator == (const Date& date1, const Date& date2)
 
 bool operator > (const Date& date1, const Date& date2)
 {
-	return !(date1 < date2);
+	return (date2 < date1);
 }
 
 bool operator != (const Date& date1, const Date& date2)
@@ -52,10 +52,10 @@ bool operator != (const Date& date1, const Date& date2)
 
 bool operator <= (const Date& date1, const Date& date2)
 {
-	return date1 < date2 || date1 == date2;
+	return !(date1 > date2);
 }
 
 bool operator >= (const Date& date1, const Date& date2)
 {
-	return date1 > date2 || date1 == date2;
+	return !(date1 < date2);
 }
