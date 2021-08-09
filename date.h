@@ -1,20 +1,18 @@
 #pragma once
 #include <sstream>
 
-using namespace std;
-
 struct Date
 {
-	Date(const int& year, const int& month, const int& day);
+	Date(int& year, int& month, int& day);
 	
-	const int year_;
-	const int month_;
-	const int day_;
+	 int year_;
+	 int month_;
+	 int day_;
 };
 
-Date ParseDate(istringstream& is);
+Date ParseDate(std::istringstream& is);
 
-ostream& operator << (ostream& stream, const Date& date);
+std::ostream& operator << (std::ostream& stream, const Date& date);
 
 bool operator < (const Date& date1, const Date& date2);
 

@@ -1,37 +1,98 @@
 #pragma once
+#include "date.h"
+
 #include <map>
 #include <string>
 #include <vector>
-
-#include "date.h"
-
-using namespace std;
+#include <algorithm>
 
 struct DateEvent
 {
-	DateEvent(const Date& date, const string& event);
+	DateEvent(const Date& date, const std::string& event);
 	
 	const Date date_;
-	const string event_;
+	const std::string event_;
 };
 
-ostream& operator << (ostream& stream, const DateEvent& de);
+std::ostream& operator << (std::ostream& stream, const DateEvent& de);
 
 class Database
 {
 public:
-	void Add(const Date& date, const string& event);
+	void Add(const Date& date, const std::string& event);
 	
-	ostream& Print(ostream& stream) const;
-
-	template<typename T>
-	int RemoveIf(T predicate);
-
-	template<typename T>
-	vector<DateEvent> FindIf(T predicate);
+	std::ostream& Print(std::ostream& stream) const;
 	
 	DateEvent Last(const Date& date) const;
 
+	// declaration of the template function RemoveIf wich will get a lambda expression prediacte (function<bool(Date, string)> from
+	// library <functional>) and remove all DateEvents for what predicate returns true
+	// returns the count of deleted events
+	template<typename T>
+	int RemoveIf(T predicate)
+	{
+		int count = 0;
+		auto map_iter = begin(base_);
+		while (map_iter != end(base_))
+		{
+			const Date& date = map_iter->first;
+
+			// definition of the new lambda expresion lambda (function<bool(Date, string)> from library <functional>)
+			// which does that the same as the predicate, but for certain Date
+			auto lambda = [date, predicate](const std::string& event)->bool{ return !predicate(date, event); };
+
+			// partition will save the order of events wich won't be deleted
+			std::vector<std::string>& vector_events = map_iter->second;
+			auto iter = stable_partition(begin(vector_events), end(vector_events), lambda);
+
+			// all events that must be removed are stored in the end of vector,
+			// so we count the number of that events and efficiently delete them  from the end of vector(algorithmic complexity - O(n),
+			// by comparison std::vector.erase with algorithmic complexity - O(n^2))
+			int i = end(vector_events) - iter;
+			while (i > 0)
+			{
+				vector_events.pop_back();
+				++count;
+				--i;
+			}
+			++map_iter;
+		}
+		return count;
+	}
+
+	// declaration of the template function FindIf wich will get a lambda expression prediacte (function<bool(Date, string)> from
+	// library <functional>) and put into vector all DateEvents for what predicate returns true
+	// returns a vector that events
+	template<typename T>
+	std::vector<DateEvent> FindIf(T predicate)
+	{
+		std::vector<DateEvent> result;
+		auto map_iter = begin(base_);
+		while (map_iter != end(base_))
+		{
+			const Date& date = map_iter->first;
+
+			// definition of the new lambda expresion lambda (function<bool(Date, string)> from library <functional>)
+			// which does that the same as the predicate, but for certain Date
+			auto lambda = [date, predicate](const std::string& event)->bool{ return predicate(date, event); };
+
+			std::vector<std::string>& vector_events = map_iter->second;
+
+			int count = 0;
+			while (count != end(vector_events) - begin(vector_events)) {
+				auto iter = find_if(begin(vector_events) + count, end(vector_events),
+					lambda);
+				count = iter - begin(vector_events);
+				// increase the counter to start from a new location of vector_evensts
+				++count;
+				result.push_back({ date, *iter });
+			}
+
+			++map_iter;
+		}
+		return result;
+	}
+
 private:
-	map<const Date, vector<const string>> base_;
+	std::map<Date, std::vector<std::string>> base_;
 };
