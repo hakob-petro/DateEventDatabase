@@ -6,25 +6,25 @@ Link to [C++ : Yellow Belt] - [Final Task](https://www.coursera.org/learn/c-plus
 <br><br>
 In more detail, our program is able to process a set of commands:
 <hr />
-- __Add dateevent__ — add a pair to the database (date, event);
+- <strong>Add dateevent</strong> — add a pair to the database (date, event);
 <br>
-- __Print__ — output the entire contents of the database;
+- <strong>Print</strong> — output the entire contents of the database;
 <br>
-- __Find condition__ — output all records contained in the database that meet the **condition**;
+- <strong>Find condition</strong> — output all records contained in the database that meet the **condition**;
 <br>
-- __Del condition__ — delete all records from the database that meet the **condition**;
+- <strong>Del condition</strong> — delete all records from the database that meet the **condition**;
 <br>
-- __Last date__ — output a record with the last event that occurred no later than this date.
+- <strong>Last date</strong> — output a record with the last event that occurred no later than this date.
 <hr />
 The conditions in the Find and Del commands impose certain restrictions on dates and events, for example:
 <hr />
-- __Find date < 2017-11-06__ — find all events that happened earlier than November 6, 2017;
+- <strong>Find date < 2017-11-06</strong> — find all events that happened earlier than November 6, 2017;
 <br>
-- __Del event != "holiday"__ — delete all events from the database except "holiday";
+- <strong>Del event != "holiday"</strong> — delete all events from the database except "holiday";
 <br>
-- __Find date >= 2017-01-01 AND date < 2017-07-01 AND event == "sport event"__ — find all the "sport event" events that happened in the first half of 2017;
+- <strong>Find date >= 2017-01-01 AND date < 2017-07-01 AND event == "sport event"</strong> — find all the "sport event" events that happened in the first half of 2017;
 <br>
-- __Del date < 2017-01-01 AND (event == "holiday" OR event == "sport event")__ — delete all "holiday" and "sport event" events that occurred before 2017 from the database.
+- <strong>Del date < 2017-01-01 AND (event == "holiday" OR event == "sport event")</strong> — delete all "holiday" and "sport event" events that occurred before 2017 from the database.
 <hr /> 
 In both types of commands, the conditions can be empty: all events fall under this condition.
 <br>
@@ -33,7 +33,7 @@ In both types of commands, the conditions can be empty: all events fall under th
 
 Below are the descriptions for the project files.
 <hr />
-- condition_parser.h/cpp — contain an implementation of an abstract syntax tree for arithmetic expressions. The implementation of this algorithm for parsing conditions in the __Find__ and __Del__ commands is contained in the ParseCondition function, declared and fully implemented in the condition_parser.h/cpp files;p;
+- condition_parser.h/cpp — contain an implementation of an abstract syntax tree for arithmetic expressions. The implementation of this algorithm for parsing conditions in the <strong>Find</strong> and <strong>Del</strong> commands is contained in the ParseCondition function, declared and fully implemented in the condition_parser.h/cpp files;p;
 <br>
  - token.h/cpp — contain a ready-made tokenizer that is used in the ParseCondition function;
 <br>
@@ -49,12 +49,13 @@ Below are the descriptions for the project files.
 <br>
 - main.cpp — contains a ready-made main function.
 <hr />
+
 ## Input and output format
 The standard input contains commands for working with the database, one command per line. Our program should read them and output the processing results to standard output. The rules for processing commands are given below.
 <br>
 ### Add command
 
-After encountering the __Add dateevent__ command, our program should add a pair (__date__, __event__) to the database and then show it when searching (the __Find__ command) or printing (the __Print__ command). The same events that occurred on the same day do not need to be saved: adding an existing pair (__date__, __event__) to the database should be ignored. Many different events can occur on the same date, the database should be able to save them all.
+After encountering the <strong>Add dateevent</strong> command, our program should add a pair (<strong>date</strong>, <strong>event</strong>) to the database and then show it when searching (the <strong>Find</strong> command) or printing (the <strong>Print</strong> command). The same events that occurred on the same day do not need to be saved: adding an existing pair (<strong>date</strong>, </strong>event</strong>) to the database should be ignored. Many different events can occur on the same date, the database should be able to save them all.
 <br><br>
 It is guaranteed that the __date__ field in the __Add__ command has the format *"Year-Month-Day"*, where the *Year* is an integer from 0 to 9999, the *Month* is the number of the month from 1 to 12 inclusive, the *Day* is the number of the day from 1 to 31 inclusive. The date must be followed by a space separating it from the event. Examples of correct dates: __2017-11-07__, __0-2-31__.
 <br><br>
