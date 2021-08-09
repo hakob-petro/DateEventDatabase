@@ -5,7 +5,7 @@ This is a simple database implementation that works with pairs. It can select an
 Link to [C++ : Yellow Belt] - [Final Task](https://www.coursera.org/learn/c-plus-plus-yellow/programming/n1Nbg/kursovoi-proiekt)
 <br><br>
 In more detail, our program is able to process a set of commands:
-***
+<hr />
 - **Add dateevent** — add a pair to the database (date, event);
 <br>
 - **Print** — output the entire contents of the database;
@@ -15,9 +15,9 @@ In more detail, our program is able to process a set of commands:
 - **Del condition** — delete all records from the database that meet the **condition**;
 <br>
 - **Last date** — output a record with the last event that occurred no later than this date.
-***
+<hr />
 The conditions in the Find and Del commands impose certain restrictions on dates and events, for example:
-***
+<hr />
 - **Find date < 2017-11-06** — find all events that happened earlier than November 6, 2017;
 <br>
 - **Del event != "holiday"** — delete all events from the database except "holiday";
@@ -25,14 +25,14 @@ The conditions in the Find and Del commands impose certain restrictions on dates
 - **Find date >= 2017-01-01 AND date < 2017-07-01 AND event == "sport event"** — find all the "sport event" events that happened in the first half of 2017;
 <br>
 - **Del date < 2017-01-01 AND (event == "holiday" OR event == "sport event")** — delete all "holiday" and "sport event" events that occurred before 2017 from the database.
-***
+<hr /> 
 In both types of commands, the conditions can be empty: all events fall under this condition.
 <br>
 
 ## Program structure
 
 Below are the descriptions for the project files.
-***
+<hr />
 - condition_parser.h/cpp — contain an implementation of an abstract syntax tree for arithmetic expressions. The implementation of this algorithm for parsing conditions in the **Find** and **Del** commands is contained in the ParseCondition function, declared and fully implemented in the condition_parser.h/cpp files;p;
 <br>
  - token.h/cpp — contain a ready-made tokenizer that is used in the ParseCondition function;
@@ -48,7 +48,7 @@ Below are the descriptions for the project files.
 - condition_parser_test.cpp - tests...
 <br>
 - main.cpp — contains a ready-made main function.
-***
+<hr />
 ## Input and output format
 The standard input contains commands for working with the database, one command per line. Our program should read them and output the processing results to standard output. The rules for processing commands are given below.
 <br>
