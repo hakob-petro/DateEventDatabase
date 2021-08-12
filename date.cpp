@@ -1,25 +1,27 @@
 #include "date.h"
 
-#include <vector>
-
 using namespace std;
 
-Date::Date(int& year, int& month, int& day) : year_(year), month_(month), day_(day) {}
+Date::Date(const int& year, const int& month, const int& day) : year_(year), month_(month), day_(day) {}
 
 Date ParseDate(istringstream& is)
 {
-	vector<int> date;
-	int number = 0 ;
-	while (is >> number && date.size()!=3) {
-		is.ignore(1);
-		date.push_back(number);
-	}
-	return {date[0], date[1], date[2]};
+	int year, month, day;
+	is >> year;
+	is.ignore(1);
+	is >> month;
+	is.ignore(1);
+	is >> day;
+	return {year, month, day};
 }
 
 ostream& operator << (ostream& stream, const Date &date)
 {
-	stream << date.year_ << "-" << date.month_ << "_" << date.day_;
+	stream << date.year_ << "-";
+	if(date.month_ > 10) stream << date.month_ << "-";
+	else stream << "0" << date.month_ << "-";
+	if(date.day_ > 10) stream << date.day_;
+	else stream << "0" << date.day_;
 	return stream;
 }
 

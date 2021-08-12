@@ -5,16 +5,17 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
-struct DateEvent
+struct Entry
 {
-	DateEvent(const Date& date, const std::string& event);
+	Entry(const Date& date, const std::string& event);
 	
 	const Date date_;
 	const std::string event_;
 };
 
-std::ostream& operator << (std::ostream& stream, const DateEvent& de);
+std::ostream& operator << (std::ostream& stream, const Entry& de);
 
 class Database
 {
@@ -23,10 +24,10 @@ public:
 	
 	std::ostream& Print(std::ostream& stream) const;
 	
-	DateEvent Last(const Date& date) const;
+	Entry Last(const Date& date) const;
 
 	// declaration of the template function RemoveIf wich will get a lambda expression prediacte (function<bool(Date, string)> from
-	// library <functional>) and remove all DateEvents for what predicate returns true
+	// library <functional>) and remove all Entrys for what predicate returns true
 	// returns the count of deleted events
 	template<typename T>
 	int RemoveIf(T predicate)
@@ -39,7 +40,7 @@ public:
 
 			// definition of the new lambda expresion lambda (function<bool(Date, string)> from library <functional>)
 			// which does that the same as the predicate, but for certain Date
-			auto lambda = [date, predicate](const std::string& event)->bool{ return !predicate(date, event); };
+			auto lambda = [date, predicate](const std::string& event)->bool { return !predicate(date, event); };
 
 			// partition will save the order of events wich won't be deleted
 			std::vector<std::string>& vector_events = map_iter->second;
@@ -55,18 +56,23 @@ public:
 				++count;
 				--i;
 			}
-			++map_iter;
+
+			// check if there are no events, delete the date
+			if (vector_events.empty())
+				map_iter = base_.erase(map_iter);
+			else
+				++map_iter;
 		}
 		return count;
 	}
 
 	// declaration of the template function FindIf wich will get a lambda expression prediacte (function<bool(Date, string)> from
-	// library <functional>) and put into vector all DateEvents for what predicate returns true
+	// library <functional>) and put into vector all Entrys for what predicate returns true
 	// returns a vector that events
 	template<typename T>
-	std::vector<DateEvent> FindIf(T predicate)
+	std::vector<Entry> FindIf(T predicate)
 	{
-		std::vector<DateEvent> result;
+		std::vector<Entry> result;
 		auto map_iter = begin(base_);
 		while (map_iter != end(base_))
 		{
@@ -78,14 +84,13 @@ public:
 
 			std::vector<std::string>& vector_events = map_iter->second;
 
-			int count = 0;
-			while (count != end(vector_events) - begin(vector_events)) {
-				auto iter = find_if(begin(vector_events) + count, end(vector_events),
-					lambda);
-				count = iter - begin(vector_events);
-				// increase the counter to start from a new location of vector_evensts
-				++count;
-				result.push_back({ date, *iter });
+			auto iter = begin(vector_events);
+			while (iter != end(vector_events)) {
+				iter = find_if(iter, end(vector_events), lambda);
+				if (iter != end(vector_events)) {
+					result.push_back({ date, *iter });
+					++iter;
+				}
 			}
 
 			++map_iter;

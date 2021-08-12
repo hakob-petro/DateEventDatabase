@@ -3,11 +3,11 @@
 
 struct Date
 {
-	Date(int& year, int& month, int& day);
+	Date(const int& year, const int& month, const int& day);
 	
-	 int year_;
-	 int month_;
-	 int day_;
+	const int year_;
+	const int month_;
+	const int day_;
 };
 
 Date ParseDate(std::istringstream& is);

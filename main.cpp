@@ -3,6 +3,7 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
+#include "test_db.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -11,7 +12,7 @@ using namespace std;
 
 string ParseEvent(istream& is) {
 	string event;
-	getline(is, event);
+	getline(is >> std::ws, event);
 	return event;
 }
 
@@ -31,8 +32,8 @@ int main() {
 		is >> command;
 		if (command == "Add")
 		{
-			const auto date = ParseDate(is); // get Date date from stream 
-			const auto event = ParseEvent(is); // get string event from stream
+			const Date date = ParseDate(is); 
+			const string event = ParseEvent(is);
 			db.Add(date, event);
 		}
 		else if (command == "Print") 
@@ -41,10 +42,10 @@ int main() {
 		}
 		else if (command == "Del")
 		{
-			auto condition = ParseCondition(is); // get sahred_ptr<Node> condition from strteam
+			shared_ptr<Node> condition = ParseCondition(is);
 
 			// lambda expression that for each date and event evaluate true it or false
-			auto predicate = [condition](const Date& date, const string& event)->bool
+			function<bool(const Date&, const string&)> predicate = [condition](const Date& date, const string& event)->bool
 			{
 				return condition->Evaluate(date, event);
 			};
@@ -54,16 +55,16 @@ int main() {
 		}
 		else if (command == "Find") 
 		{
-			auto condition = ParseCondition(is);
+			shared_ptr<Node> condition = ParseCondition(is);
 
 			// lambda expression that for each date and event evaluate true it or false
-			auto predicate = [condition](const Date& date, const string& event)->bool
+			function<bool(const Date&, const string&)> predicate = [condition](const Date& date, const string& event)->bool
 			{
 				return condition->Evaluate(date, event);
 			};
 
-			const auto entries = db.FindIf(predicate);
-			for (const auto& entry : entries) {
+			const vector<Entry> entries = db.FindIf(predicate);
+			for (const Entry& entry : entries) {
 				cout << entry << endl;
 			}
 			cout << "Found " << entries.size() << " entries" << endl;
@@ -106,9 +107,17 @@ void TestParseEvent() {
 	}
 }
 
-// test functions ParseEvent and ParseCondition
+// test functions ParseEvent and ParseCondition and others...
 void TestAll() {
 	TestRunner tr;
 	tr.RunTest(TestParseEvent, "TestParseEvent");
 	tr.RunTest(TestParseCondition, "TestParseCondition");
+	tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
+	tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
+	tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
+	tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
+	tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
+	tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
+	tr.RunTest(TestsMyCustom, "Мои тесты");
+	tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
 }
