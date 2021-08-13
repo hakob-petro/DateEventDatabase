@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <functional>
 
 struct Entry
 {
@@ -70,7 +69,7 @@ public:
 	// library <functional>) and put into vector all Entrys for what predicate returns true
 	// returns a vector that events
 	template<typename T>
-	std::vector<Entry> FindIf(T predicate)
+	std::vector<Entry> FindIf(const T predicate) const
 	{
 		std::vector<Entry> result;
 		auto map_iter = begin(base_);
@@ -82,7 +81,7 @@ public:
 			// which does that the same as the predicate, but for certain Date
 			auto lambda = [date, predicate](const std::string& event)->bool{ return predicate(date, event); };
 
-			std::vector<std::string>& vector_events = map_iter->second;
+			const std::vector<std::string>& vector_events = map_iter->second;
 
 			auto iter = begin(vector_events);
 			while (iter != end(vector_events)) {

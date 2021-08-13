@@ -10,7 +10,7 @@ struct Date
 	const int day_;
 };
 
-Date ParseDate(std::istringstream& is);
+Date ParseDate(std::istream& is);
 
 std::ostream& operator << (std::ostream& stream, const Date& date);
 

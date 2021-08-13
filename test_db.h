@@ -1,9 +1,10 @@
+#pragma once
+
 #include "test_runner.h"
 #include "database.h"
 #include "condition_parser.h"
 #include <sstream>
 #include "node.h"
-#include "test_runner.h"
 
 #include <sstream>
 
@@ -26,14 +27,14 @@
 using namespace std;
 
 class AlwaysFalseNode : public Node {
-	bool Evaluate(const Date&, const std::string& event) const override {
+	bool Evaluate(const Date&, const std::string& event) override {
 		return false;
 	}
 };
 
 string ParseEvent(istream& is);
 
-int DoRemove (Database& db, const string& str) {
+inline int DoRemove (Database& db, const string& str) {
     istringstream is (str);
     auto condition = ParseCondition(is);
     auto predicate = [condition](const Date &date, const string &event) {

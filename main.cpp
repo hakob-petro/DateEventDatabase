@@ -3,8 +3,9 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
-#include "test_db.h"
+//#include "test_db.h"
 
+#include <memory>
 #include <iostream>
 #include <stdexcept>
 
@@ -16,11 +17,11 @@ string ParseEvent(istream& is) {
 	return event;
 }
 
-void TestAll();
+// void TestAll();
 
 int main() {
 	// run all configured tests
-	TestAll();
+	//TestAll();
 	// if it is okay run the next part
 	
 	Database db;
@@ -45,7 +46,7 @@ int main() {
 			shared_ptr<Node> condition = ParseCondition(is);
 
 			// lambda expression that for each date and event evaluate true it or false
-			function<bool(const Date&, const string&)> predicate = [condition](const Date& date, const string& event)->bool
+			auto predicate = [condition](const Date& date, const string& event)->bool
 			{
 				return condition->Evaluate(date, event);
 			};
@@ -58,7 +59,7 @@ int main() {
 			shared_ptr<Node> condition = ParseCondition(is);
 
 			// lambda expression that for each date and event evaluate true it or false
-			function<bool(const Date&, const string&)> predicate = [condition](const Date& date, const string& event)->bool
+			auto predicate = [condition](const Date& date, const string& event)->bool
 			{
 				return condition->Evaluate(date, event);
 			};
@@ -108,16 +109,16 @@ void TestParseEvent() {
 }
 
 // test functions ParseEvent and ParseCondition and others...
-void TestAll() {
-	TestRunner tr;
-	tr.RunTest(TestParseEvent, "TestParseEvent");
-	tr.RunTest(TestParseCondition, "TestParseCondition");
-	tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
-	tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
-	tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
-	tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
-	tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
-	tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
-	tr.RunTest(TestsMyCustom, "Мои тесты");
-	tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
-}
+//void TestAll() {
+//	TestRunner tr;
+//	tr.RunTest(TestParseEvent, "TestParseEvent");
+//	tr.RunTest(TestParseCondition, "TestParseCondition");
+//	tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
+//	tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
+//	tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
+//	tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
+//	tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
+//	tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
+//	tr.RunTest(TestsMyCustom, "Мои тесты");
+//	tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
+//}

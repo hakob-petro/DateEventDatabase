@@ -1,10 +1,12 @@
 #include "date.h"
 
+#include <iomanip>
+
 using namespace std;
 
 Date::Date(const int& year, const int& month, const int& day) : year_(year), month_(month), day_(day) {}
 
-Date ParseDate(istringstream& is)
+Date ParseDate(istream& is)
 {
 	int year, month, day;
 	is >> year;
@@ -17,11 +19,9 @@ Date ParseDate(istringstream& is)
 
 ostream& operator << (ostream& stream, const Date &date)
 {
-	stream << date.year_ << "-";
-	if(date.month_ > 10) stream << date.month_ << "-";
-	else stream << "0" << date.month_ << "-";
-	if(date.day_ > 10) stream << date.day_;
-	else stream << "0" << date.day_;
+	stream << std::setw(4) << std::setfill('0') << date.year_<<
+		"-" << std::setw(2) << std::setfill('0') << date.month_ <<
+		"-" << std::setw(2) << std::setfill('0') << date.day_;
 	return stream;
 }
 

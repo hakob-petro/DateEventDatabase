@@ -2,6 +2,7 @@
 #include "date.h"
 
 #include <string>
+#include <memory>
 
 enum class Comparison
 {
@@ -22,11 +23,12 @@ enum class LogicalOperation
 class Node
 {
 public:
-	virtual bool Evaluate(const Date& date, const std::string& event) = 0;
+	virtual bool Evaluate(const Date& date, const std::string& event)  = 0;
 };
 
 class EmptyNode : public Node
 {
+public:
 	bool Evaluate(const Date& date, const std::string& event) override;
 };
 
