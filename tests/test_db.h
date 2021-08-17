@@ -1,10 +1,10 @@
 #pragma once
 
 #include "test_runner.h"
-#include "database.h"
-#include "condition_parser.h"
+#include "../include/database.h"
+#include "../include/condition_parser.h"
 #include <sstream>
-#include "node.h"
+#include "../include/node.h"
 
 #include <sstream>
 

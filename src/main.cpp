@@ -1,8 +1,8 @@
-#include "database.h"
-#include "date.h"
-#include "condition_parser.h"
-#include "node.h"
-#include "test_runner.h"
+#include "../include/database.h"
+#include "../include/date.h"
+#include "../include/condition_parser.h"
+#include "../include/node.h"
+#include "../tests/test_runner.h"
 //#include "test_db.h"
 
 #include <memory>
